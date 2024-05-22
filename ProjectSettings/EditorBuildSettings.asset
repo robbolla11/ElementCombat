@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Main Menu.unity
+    guid: 0b6c4920e3e990d4cb35c8693c36221a
+  - enabled: 1
+    path: Assets/Scenes/Ronda1.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/Ronda2.unity
+    guid: e8060e68c7c3de54b8160a7a03d55d33
+  - enabled: 1
+    path: Assets/Scenes/Ronda3.unity
+    guid: 1804db2f64d1071498a0858dba08294a
+  - enabled: 1
+    path: Assets/Scenes/Win.unity
+    guid: 82abe4a702c31d54b849a2edcaee1ff5
+  - enabled: 1
+    path: Assets/Scenes/Lose.unity
+    guid: 653a26f9d0d141c458fa5bfa0dc62308
+  - enabled: 1
+    path: Assets/Scenes/Tie.unity
+    guid: a90b3e7eb6ad37b4b8fd806255af80e4
+  m_configObjects: {}
