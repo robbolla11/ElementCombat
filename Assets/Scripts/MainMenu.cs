@@ -9,44 +9,54 @@ public class MainMenu : MonoBehaviour
     public GameObject activar;
     public CameraMover cameraMover; // Referencia al script de movimiento de la cámara
 
+    public TransicionEscena transicionEscena;
+
+    AudioManager audioManager;
+
 
     private void Start()
     {
         // Obtener referencia al script de movimiento de la cámara
         cameraMover = FindObjectOfType<CameraMover>();
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
     public void Juego()
     {
-        SceneManager.LoadSceneAsync(1);
+        audioManager.playSFX(audioManager.click2, 0.65f);
+        transicionEscena.EscenaRonda1();
     }
 
     public void HowTo()
     {
+        audioManager.playSFX(audioManager.click2, 0.65f);
         desactivar.SetActive(false);
         activar.SetActive(true);
     }
 
     public void Back()
     {
+        audioManager.playSFX(audioManager.click2, 0.65f);
         desactivar.SetActive(true);
         activar.SetActive(false);
     }
 
     public void Salir()
     {
+        audioManager.playSFX(audioManager.click2, 0.65f);
         Application.Quit();
     }
 
     public void MenuInicio()
     {
         // Reactivar el script de movimiento de la cámara cuando regresas al menú principal
+        audioManager.playSFX(audioManager.click2, 0.65f);
         if (cameraMover != null)
         {
             cameraMover.enabled = true;
         }
         reiniciar();
-        SceneManager.LoadSceneAsync(0);
+        transicionEscena.Menu();
     }
     void reiniciar()
     {

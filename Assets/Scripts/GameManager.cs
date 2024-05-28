@@ -51,7 +51,9 @@ public class GameManager : MonoBehaviour
     public static Color estrella2Color = Color.white;
     public static Color estrella3Color = Color.white;
 
-    
+    public TransicionEscena transicionEscena;
+
+    AudioManager audioManager;
 
 
     public bool IsPlayerTurn
@@ -74,6 +76,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {   
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         currentRound++;
         Debug.Log("ronda: " + currentRound);
         StartCoroutine(PlayGame());
@@ -117,13 +120,32 @@ public class GameManager : MonoBehaviour
             reloj.SetActive(true);
             relojComponent.sprite = relojes[0];
             
+            float interval = 1f;
+            float nextTick = interval;
+
+            audioManager.playSFX(audioManager.tick, 0.1f);
+
             while (isPlayerTurn && timer < timeout)
             {
-                relojComponent.sprite = relojes[(int)timer+1];
+                int spriteIndex = Mathf.Clamp((int)timer + 1, 0, relojes.Length - 1);
+                relojComponent.sprite = relojes[spriteIndex];
+
+                if (timer >= nextTick)
+                {
+                    audioManager.playSFX(audioManager.tick, 0.1f);
+                    nextTick += interval;
+                }
+
+                // Increment the timer
                 timer += Time.deltaTime;
+
+                // Play the ticking sound at fixed intervals
                 
+
+                // Wait until the next frame
                 yield return null;
             }
+
             isPlayerTurn = false;
 
             // If the player didn't select a card within the timeout, choose one randomly
@@ -185,6 +207,7 @@ public class GameManager : MonoBehaviour
             if(playerScore==5)
             {
                 ganadasPlayer++;
+                audioManager.playSFX(audioManager.gong, 0.9f);
                 Debug.Log("Juego terminado. Puntaje final - Jugador: " + playerScore + ", Rival: " + enemyScore);
                 UpdateScoreBoard();
                 roundResult.SetActive(true);
@@ -192,12 +215,14 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(5f);
                 roundResult.SetActive(false);
                 DetermineOverallWinner();
+                break;
                 
             }
 
             if(enemyScore==5)
             {
                 ganadasEnemy++;
+                audioManager.playSFX(audioManager.gong, 0.9f);
                 Debug.Log("Juego terminado. Puntaje final - Jugador: " + playerScore + ", Rival: " + enemyScore);
                 UpdateScoreBoard();
                 roundResult.SetActive(true);
@@ -205,6 +230,7 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(5f);
                 roundResult.SetActive(false);
                 DetermineOverallWinner();
+                break;
             }
         }
 
@@ -212,6 +238,7 @@ public class GameManager : MonoBehaviour
         if(playerScore > enemyScore && playerScore < 5)
         {
             ganadasPlayer++;
+            audioManager.playSFX(audioManager.gong, 0.9f);
             UpdateScoreBoard();
             roundResult.SetActive(true);
             resultComponent.sprite = results[0];
@@ -223,6 +250,7 @@ public class GameManager : MonoBehaviour
         else if(playerScore < enemyScore && enemyScore < 5)
         {
             ganadasEnemy++;
+            audioManager.playSFX(audioManager.gong, 0.9f);
             UpdateScoreBoard();
             roundResult.SetActive(true);
             resultComponent.sprite = results[1];
@@ -234,6 +262,7 @@ public class GameManager : MonoBehaviour
         else if(playerScore == enemyScore)
         {
             empatesRondas++;
+            audioManager.playSFX(audioManager.gong, 0.9f);
             UpdateScoreBoard();
             roundResult.SetActive(true);
             resultComponent.sprite = results[2];
@@ -398,7 +427,7 @@ public class GameManager : MonoBehaviour
         {
             // Siempre después de la primera ronda, ve a la escena 2
             Debug.Log("Ronda 1 completada");
-            SceneManager.LoadScene(2);
+            transicionEscena.EscenaRonda2();
         }
         else if (currentRound == 2)
         {
@@ -407,18 +436,18 @@ public class GameManager : MonoBehaviour
             {
                 Debug.Log("Gano jugador");
                 reiniciar();
-                SceneManager.LoadScene(4); // Escena de victoria del jugador
+                transicionEscena.Victoria();
             }
             else if (ganadasEnemy == 2)
             {
                 Debug.Log("Gano enemigo");
                 reiniciar();
-                SceneManager.LoadScene(5); // Escena de victoria del enemigo
+                transicionEscena.Derrota();
             }
             else
             {
                 Debug.Log("Ronda 2 completada");
-                SceneManager.LoadScene(3); // Continuar a la siguiente ronda
+                transicionEscena.EscenaRonda3();
             }
         }
         else if (currentRound == 3)
@@ -428,37 +457,37 @@ public class GameManager : MonoBehaviour
             {
                 Debug.Log("Gano jugador");
                 reiniciar();
-                SceneManager.LoadScene(4); // Escena de victoria del jugador
+                transicionEscena.Victoria();
             }
             else if (ganadasEnemy == 2)
             {
                 Debug.Log("Gano enemigo");
                 reiniciar();
-                SceneManager.LoadScene(5); // Escena de victoria del enemigo
+                transicionEscena.Derrota();
             }
             else if (ganadasPlayer == 1 && empatesRondas == 2)
             {
                 Debug.Log("gana user");
                 reiniciar();
-                SceneManager.LoadScene(4); // Escena de empate
+                transicionEscena.Victoria();
             }
             else if (ganadasEnemy == 1 && empatesRondas == 2)
             {
                 Debug.Log("gana enemy");
                 reiniciar();
-                SceneManager.LoadScene(5); // Escena de empate
+                transicionEscena.Derrota();
             }
             else if (ganadasPlayer == 1 && ganadasEnemy == 1 && empatesRondas == 1)
             {
                 Debug.Log("Empate con una victoria cada uno");
                 reiniciar();
-                SceneManager.LoadScene(6); // Escena de empate
+                transicionEscena.Empate();
             }
             else
             {
                 Debug.Log("Juego empatado");
                 reiniciar();
-                SceneManager.LoadScene(6); // Escena de empate general
+                transicionEscena.Empate();
             }
         }
     }

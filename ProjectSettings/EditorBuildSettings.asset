@@ -13,10 +13,10 @@ EditorBuildSettings:
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
     path: Assets/Scenes/Ronda2.unity
-    guid: e8060e68c7c3de54b8160a7a03d55d33
+    guid: 6adffcb80840545438972f87f255c0c6
   - enabled: 1
     path: Assets/Scenes/Ronda3.unity
-    guid: 1804db2f64d1071498a0858dba08294a
+    guid: 7aa2076464fad8c4f91d9061ccc9bcc0
   - enabled: 1
     path: Assets/Scenes/Win.unity
     guid: 82abe4a702c31d54b849a2edcaee1ff5

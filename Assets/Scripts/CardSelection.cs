@@ -8,12 +8,14 @@ public class CardSelection : MonoBehaviour
 {
     private GameManager gameManager;
 
+    AudioManager audioManager;
     private Vector3 originalScale;
     public float hoverScaleFactor = 1.2f; // Factor por el cual se agranda la carta al pasar el mouse
     public float animationDuration = 0.2f; // Duración de la animación
 
     void Start()
     {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         gameManager = GameObject.FindObjectOfType<GameManager>();
         originalScale = transform.localScale; // Guardar la escala original de la carta
     }
@@ -22,13 +24,14 @@ public class CardSelection : MonoBehaviour
     {
         if (!gameManager.IsPlayerTurn)
             return;
-
+        audioManager.playSFX(audioManager.click, 0.65f);
         gameManager.SelectPlayerCard(gameObject);
     }
 
     void OnMouseEnter()
     {
         StopAllCoroutines(); // Detener cualquier otra animación que esté ocurriendo
+        audioManager.playSFX(audioManager.hover, 0.53f);
         StartCoroutine(ScaleOverTime(transform, originalScale * hoverScaleFactor, animationDuration));
     }
 
